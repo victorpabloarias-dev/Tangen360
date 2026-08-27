@@ -58,15 +58,38 @@
   }
   @keyframes fadeOut { 0%,70% { opacity: 1; } 100% { opacity: 0; } }
 
-  /* === Barra inferior con zonas === */
-  .zones-nav {
+  /* === Barra inferior con zonas y pasos === */
+  .nav-container {
     position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    z-index: 10; max-width: 95vw;
+  }
+
+  .sub-steps-nav {
+    background: rgba(20,20,20,0.85); backdrop-filter: blur(12px);
+    border-radius: 20px; padding: 4px 8px;
+    display: flex; gap: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .step-btn {
+    background: transparent; border: none;
+    color: rgba(255,255,255,0.6);
+    width: 32px; height: 32px; border-radius: 12px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+  .step-btn.active { background: rgba(255,255,255,0.3); color: #fff; }
+
+  .zones-nav {
     background: rgba(20,20,20,0.8); backdrop-filter: blur(12px);
-    border-radius: 16px; padding: 6px; z-index: 10;
+    border-radius: 16px; padding: 6px;
     display: flex; gap: 4px;
     box-shadow: 0 8px 28px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.08);
-    max-width: 95vw; overflow-x: auto;
+    overflow-x: auto; max-width: 100%;
   }
   .zone-btn {
     background: transparent; border: none;
@@ -79,24 +102,14 @@
   }
   .zone-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
   .zone-btn.active { background: #fff; color: #111; font-weight: 600; }
-  .zone-btn .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .zone-btn[data-zone="inngangen"]    .dot { background: #4ade80; }
-  .zone-btn[data-zone="smultringen"]  .dot { background: #fbbf24; }
-  .zone-btn[data-zone="kantine"]      .dot { background: #60a5fa; }
-  .zone-btn[data-zone="verkstedet"]   .dot { background: #f97316; }
-  .zone-btn[data-zone="2etg"]         .dot { background: #a78bfa; }
+  .zone-btn .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .zone-btn[data-zone="inngangen"] .dot { background: #4ade80; }
+  .zone-btn[data-zone="smultringen"] .dot { background: #fbbf24; }
+  .zone-btn[data-zone="kantine"] .dot { background: #60a5fa; }
+  .zone-btn[data-zone="verkstedet"] .dot { background: #f97316; }
+  .zone-btn[data-zone="2etg"] .dot { background: #a78bfa; }
 
-  /* === HOTSPOTS ===
-     Importante: usamos selectores .pnlm-hotspot.hs-xxx con alta especificidad
-     y !important en background para sobreescribir el sprite por defecto de
-     Pannellum (que de otra forma tapa nuestros estilos con un iconito por defecto).
-     NO tocamos position — Pannellum necesita mantener position:absolute para
-     colocar las flechas en coordenadas yaw/pitch. */
-
-  /* Reset común: quitar el sprite por defecto y mostrar cursor de puntero */
+  /* === HOTSPOTS === */
   .pnlm-hotspot.hs-forward,
   .pnlm-hotspot.hs-back,
   .pnlm-hotspot.hs-branch {
@@ -106,118 +119,78 @@
     border-radius: 0 !important;
   }
 
-  /* Flecha avanzar (fremover) — verde */
-  .pnlm-hotspot.hs-forward {
-    width: 54px !important;
-    height: 54px !important;
-  }
+  .pnlm-hotspot.hs-forward { width: 54px !important; height: 54px !important; }
   .pnlm-hotspot.hs-forward::before {
-    content: ''; position: absolute; inset: 0;
-    border-radius: 50%;
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: radial-gradient(circle, rgba(74,222,128,0.95) 0%, rgba(34,197,94,0.85) 100%);
     animation: pulseGreen 2s ease-in-out infinite;
-    box-shadow: 0 4px 16px rgba(34,197,94,0.5);
-    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(34,197,94,0.5); pointer-events: none;
   }
   .pnlm-hotspot.hs-forward::after {
     content: '→'; position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-size: 26px; font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    pointer-events: none;
-    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none; z-index: 2;
   }
   @keyframes pulseGreen {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.18); opacity: 0.75; }
   }
 
-  /* Flecha retroceder (tilbake) — gris */
-  .pnlm-hotspot.hs-back {
-    width: 46px !important;
-    height: 46px !important;
-  }
+  .pnlm-hotspot.hs-back { width: 46px !important; height: 46px !important; }
   .pnlm-hotspot.hs-back::before {
-    content: ''; position: absolute; inset: 0;
-    border-radius: 50%;
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: radial-gradient(circle, rgba(148,163,184,0.95) 0%, rgba(100,116,139,0.85) 100%);
     animation: pulseGray 2s ease-in-out infinite;
-    box-shadow: 0 4px 14px rgba(71,85,105,0.5);
-    pointer-events: none;
+    box-shadow: 0 4px 14px rgba(71,85,105,0.5); pointer-events: none;
   }
   .pnlm-hotspot.hs-back::after {
     content: '←'; position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-size: 22px; font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    pointer-events: none;
-    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none; z-index: 2;
   }
   @keyframes pulseGray {
     0%, 100% { transform: scale(1); opacity: 0.95; }
     50% { transform: scale(1.12); opacity: 0.7; }
   }
 
-  /* Hotspot a rama (con etiqueta del destino) — naranja */
   .pnlm-hotspot.hs-branch {
-    width: auto !important;
-    height: auto !important;
-    display: flex !important;
-    align-items: center;
-    gap: 10px;
+    width: auto !important; height: auto !important;
+    display: flex !important; align-items: center; gap: 10px;
     background: rgba(249,115,22,0.95) !important;
     padding: 10px 18px 10px 10px !important;
     border-radius: 30px !important;
     border: 2px solid rgba(255,255,255,0.4) !important;
     box-shadow: 0 6px 20px rgba(249,115,22,0.5);
-    white-space: nowrap;
-    animation: pulseBranch 2.5s ease-in-out infinite;
+    white-space: nowrap; animation: pulseBranch 2.5s ease-in-out infinite;
     transition: transform 0.2s;
   }
   .pnlm-hotspot.hs-branch:hover { transform: scale(1.06); }
   .pnlm-hotspot.hs-branch::before {
-    content: '→';
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: #fff;
-    color: #f97316;
+    content: '→'; width: 28px; height: 28px; border-radius: 50%;
+    background: #fff; color: #f97316;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: bold;
-    flex-shrink: 0;
-    pointer-events: none;
+    font-size: 18px; font-weight: bold; flex-shrink: 0; pointer-events: none;
   }
   .pnlm-hotspot.hs-branch .label {
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    pointer-events: none;
+    color: #fff; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); pointer-events: none;
   }
   @keyframes pulseBranch {
     0%, 100% { box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
     50% { box-shadow: 0 6px 30px rgba(249,115,22,0.8); }
   }
 
-  /* Tooltip que sale al pasar el ratón sobre flechas avanzar/retroceder */
   .hs-tooltip {
-    position: absolute; bottom: 110%; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.9);
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    font-weight: 500;
+    position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.9); color: #fff; padding: 6px 12px;
+    border-radius: 8px; font-size: 12px; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s; font-weight: 500;
   }
   .pnlm-hotspot.hs-forward:hover .hs-tooltip,
   .pnlm-hotspot.hs-back:hover .hs-tooltip { opacity: 1; }
 
-  /* Responsive */
   @media (max-width: 600px) {
     .zone-badge { min-width: 180px; padding: 8px 16px; }
     .zone-badge .zone-name { font-size: 14px; }
@@ -237,221 +210,43 @@
 
   <div class="hint">Dra for å se deg rundt · Klikk på pilene for å bevege deg</div>
 
-  <div class="zones-nav" id="zonesNav"></div>
+  <div class="nav-container">
+    <div class="sub-steps-nav" id="subStepsNav"></div>
+    <div class="zones-nav" id="zonesNav"></div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 <script>
-  /* ============================================================
-     ESTRUCTURA DEL TOUR
-     ============================================================ */
-
-  // Zonas (grupos visuales)
   const zones = {
-    inngangen:   { name: "Inngangen",                  color: "#4ade80" },
-    smultringen: { name: "Smultringen",                color: "#fbbf24" },
-    kantine:     { name: "Kantinen",                   color: "#60a5fa" },
+    inngangen:   { name: "Inngangen",                color: "#4ade80" },
+    smultringen: { name: "Smultringen",              color: "#fbbf24" },
+    kantine:     { name: "Kantinen",                 color: "#60a5fa" },
     verkstedet:  { name: "Bygg- og anleggsverkstedet", color: "#f97316" },
-    "2etg":      { name: "2. etasje",                  color: "#a78bfa" }
+    "2etg":      { name: "2. etasje",                color: "#a78bfa" }
   };
 
-  // Escenas con estructura ramificada
-  // - Inngangen: 1 → 2 → 3 → 4
-  // - Smultringen (4) es el nudo, con 3 ramas
-  // - Kantine: 5 → 5a → 5b → 5c
-  // - Verkstedet: 6 → 6a → 6b → 6c → 6d → 6e
-  // - 2. etasje: 7 → 7a → 7b → 7c
   const scenes = {
-    // ========= INNGANGEN =========
-    s1: {
-      zone: "inngangen", step: "1 / 3",
-      title: "Utenfor bygget",
-      panorama: "panos/1.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "forward", pitch: -5, yaw: 0, sceneId: "s2", text: "Gå mot inngangen" }
-      ]
-    },
-    s2: {
-      zone: "inngangen", step: "2 / 3",
-      title: "Ved inngangsdøren",
-      panorama: "panos/2.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s1", text: "Tilbake ut" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s3", text: "Gå inn i bygget" }
-      ]
-    },
-    s3: {
-      zone: "inngangen", step: "3 / 3",
-      title: "Servicetorg – vestibyle",
-      panorama: "panos/3.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s2", text: "Tilbake til inngangen" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s4", text: "Gå videre til Smultringen" }
-      ]
-    },
-
-    // ========= SMULTRINGEN (NUDO) =========
-    s4: {
-      zone: "smultringen", step: "Knutepunkt",
-      title: "Smultringen",
-      panorama: "panos/4.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",   pitch: -5, yaw: 180, sceneId: "s3",  text: "Tilbake til inngangen" },
-        { type: "branch", pitch: -3, yaw: -70, sceneId: "s5",  label: "Kantinen" },
-        { type: "branch", pitch: -3, yaw:  70, sceneId: "s6",  label: "Bygg- og anleggsverkstedet" },
-        { type: "branch", pitch: 15, yaw:   0, sceneId: "s7",  label: "2. etasje ↑" }
-      ]
-    },
-
-    // ========= RAMA: KANTINEN =========
-    s5: {
-      zone: "kantine", step: "1 / 4",
-      title: "Inngang til kantinen",
-      panorama: "panos/5.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s4",  text: "Tilbake til Smultringen" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s5a", text: "Gå videre inn" }
-      ]
-    },
-    s5a: {
-      zone: "kantine", step: "2 / 4",
-      title: "Kantinen – oversikt",
-      panorama: "panos/5a.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s5",  text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s5b", text: "Gå videre" }
-      ]
-    },
-    s5b: {
-      zone: "kantine", step: "3 / 4",
-      title: "Kantinen – sitteområde",
-      panorama: "panos/5b.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s5a", text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s5c", text: "Gå videre" }
-      ]
-    },
-    s5c: {
-      zone: "kantine", step: "4 / 4",
-      title: "Kantinen – sjøutsikt",
-      panorama: "panos/5c.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back", pitch: -5, yaw: 180, sceneId: "s5b", text: "Tilbake" }
-      ]
-    },
-
-    // ========= RAMA: VERKSTEDET =========
-    s6: {
-      zone: "verkstedet", step: "1 / 6",
-      title: "Inngang til verkstedet",
-      panorama: "panos/6.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s4",  text: "Tilbake til Smultringen" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s6a", text: "Gå videre" }
-      ]
-    },
-    s6a: {
-      zone: "verkstedet", step: "2 / 6",
-      title: "Vindfang",
-      panorama: "panos/6a.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s6",  text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s6b", text: "Gå videre inn" }
-      ]
-    },
-    s6b: {
-      zone: "verkstedet", step: "3 / 6",
-      title: "Verkstedhallen – inngang",
-      panorama: "panos/6b.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s6a", text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s6c", text: "Gå videre" }
-      ]
-    },
-    s6c: {
-      zone: "verkstedet", step: "4 / 6",
-      title: "Verkstedhallen – arbeidsområde",
-      panorama: "panos/6c.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s6b", text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s6d", text: "Gå videre" }
-      ]
-    },
-    s6d: {
-      zone: "verkstedet", step: "5 / 6",
-      title: "Verkstedhallen – lagerområde",
-      panorama: "panos/6d.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s6c", text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s6e", text: "Gå videre" }
-      ]
-    },
-    s6e: {
-      zone: "verkstedet", step: "6 / 6",
-      title: "Verkstedhallen – elever i arbeid",
-      panorama: "panos/6e.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back", pitch: -5, yaw: 180, sceneId: "s6d", text: "Tilbake" }
-      ]
-    },
-
-    // ========= RAMA: 2. ETASJE =========
-    s7: {
-      zone: "2etg", step: "1 / 4",
-      title: "2. etasje – øvre atrium",
-      panorama: "panos/7.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s4",  text: "Tilbake til Smultringen" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s7a", text: "Gå videre" }
-      ]
-    },
-    s7a: {
-      zone: "2etg", step: "2 / 4",
-      title: "2. etasje – korridor",
-      panorama: "panos/7a.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s7",  text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s7b", text: "Gå videre" }
-      ]
-    },
-    s7b: {
-      zone: "2etg", step: "3 / 4",
-      title: "2. etasje – balkong over Smultringen",
-      panorama: "panos/7b.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back",    pitch: -5, yaw: 180, sceneId: "s7a", text: "Tilbake" },
-        { type: "forward", pitch: -5, yaw: 0,   sceneId: "s7c", text: "Gå videre" }
-      ]
-    },
-    s7c: {
-      zone: "2etg", step: "4 / 4",
-      title: "2. etasje – Fleksrom",
-      panorama: "panos/7c.jpg",
-      yaw: 0,
-      hotSpots: [
-        { type: "back", pitch: -5, yaw: 180, sceneId: "s7b", text: "Tilbake" }
-      ]
-    }
+    s1:  { zone: "inngangen", step: "1 / 3", title: "Utenfor bygget", panorama: "panos/1.jpg", yaw: 0, hotSpots: [{ type: "forward", pitch: -5, yaw: 0, sceneId: "s2", text: "Gå mot inngangen" }] },
+    s2:  { zone: "inngangen", step: "2 / 3", title: "Ved inngangsdøren", panorama: "panos/2.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s1", text: "Tilbake ut" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s3", text: "Gå inn i bygget" }] },
+    s3:  { zone: "inngangen", step: "3 / 3", title: "Servicetorg – vestibyle", panorama: "panos/3.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s2", text: "Tilbake til inngangen" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s4", text: "Gå videre til Smultringen" }] },
+    s4:  { zone: "smultringen", step: "Knutepunkt", title: "Smultringen", panorama: "panos/4.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s3", text: "Tilbake til inngangen" }, { type: "branch", pitch: -3, yaw: -70, sceneId: "s5", label: "Kantinen" }, { type: "branch", pitch: -3, yaw: 70, sceneId: "s6", label: "Bygg- og anleggsverkstedet" }, { type: "branch", pitch: 15, yaw: 0, sceneId: "s7", label: "2. etasje ↑" }] },
+    s5:  { zone: "kantine", step: "1 / 4", title: "Inngang til kantinen", panorama: "panos/5.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s4", text: "Tilbake til Smultringen" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s5a", text: "Gå videre inn" }] },
+    s5a: { zone: "kantine", step: "2 / 4", title: "Kantinen – oversikt", panorama: "panos/5a.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s5", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s5b", text: "Gå videre" }] },
+    s5b: { zone: "kantine", step: "3 / 4", title: "Kantinen – sitteområde", panorama: "panos/5b.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s5a", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s5c", text: "Gå videre" }] },
+    s5c: { zone: "kantine", step: "4 / 4", title: "Kantinen – sjøutsikt", panorama: "panos/5c.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s5b", text: "Tilbake" }] },
+    s6:  { zone: "verkstedet", step: "1 / 6", title: "Inngang til verkstedet", panorama: "panos/6.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s4", text: "Tilbake til Smultringen" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s6a", text: "Gå videre" }] },
+    s6a: { zone: "verkstedet", step: "2 / 6", title: "Vindfang", panorama: "panos/6a.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s6", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s6b", text: "Gå videre inn" }] },
+    s6b: { zone: "verkstedet", step: "3 / 6", title: "Verkstedhallen – inngang", panorama: "panos/6b.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s6a", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s6c", text: "Gå videre" }] },
+    s6c: { zone: "verkstedet", step: "4 / 6", title: "Verkstedhallen – arbeidsområde", panorama: "panos/6c.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s6b", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s6d", text: "Gå videre" }] },
+    s6d: { zone: "verkstedet", step: "5 / 6", title: "Verkstedhallen – lagerområde", panorama: "panos/6d.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s6c", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s6e", text: "Gå videre" }] },
+    s6e: { zone: "verkstedet", step: "6 / 6", title: "Verkstedhallen – elever i arbeid", panorama: "panos/6e.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s6d", text: "Tilbake" }] },
+    s7:  { zone: "2etg", step: "1 / 4", title: "2. etasje – øvre atrium", panorama: "panos/7.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s4", text: "Tilbake til Smultringen" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s7a", text: "Gå videre" }] },
+    s7a: { zone: "2etg", step: "2 / 4", title: "2. etasje – korridor", panorama: "panos/7a.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s7", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s7b", text: "Gå videre" }] },
+    s7b: { zone: "2etg", step: "3 / 4", title: "2. etasje – balkong over Smultringen", panorama: "panos/7b.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s7a", text: "Tilbake" }, { type: "forward", pitch: -5, yaw: 0, sceneId: "s7c", text: "Gå videre" }] },
+    s7c: { zone: "2etg", step: "4 / 4", title: "2. etasje – Fleksrom", panorama: "panos/7c.jpg", yaw: 0, hotSpots: [{ type: "back", pitch: -5, yaw: 180, sceneId: "s7b", text: "Tilbake" }] }
   };
 
-  // Primera escena de cada zona (para botones de zona)
   const zoneEntry = {
     inngangen:   "s1",
     smultringen: "s4",
@@ -460,18 +255,8 @@
     "2etg":      "s7"
   };
 
-  /* ============================================================
-     CONFIGURACIÓN DE PANNELLUM
-     ============================================================ */
-
-  // Función para rellenar el contenido interno de cada tipo de hotspot.
-  // IMPORTANTE: NO tocamos hotSpotDiv.className — Pannellum ya le puso
-  // "pnlm-hotspot pnlm-sprite pnlm-scene <cssClass>" y necesita mantener
-  // esas clases para que el posicionamiento yaw/pitch funcione. Solo
-  // añadimos el contenido HTML dentro del div.
   function createHotspot(hotSpotDiv, args) {
     const { type, text, label } = args;
-
     if (type === "forward" || type === "back") {
       hotSpotDiv.innerHTML = '<span class="hs-tooltip">' + (text || "") + '</span>';
     } else if (type === "branch") {
@@ -479,7 +264,6 @@
     }
   }
 
-  // Construir escenas para Pannellum
   const pannellumScenes = {};
   Object.keys(scenes).forEach(key => {
     const s = scenes[key];
@@ -492,11 +276,8 @@
       hfov: 110,
       title: s.title,
       hotSpots: s.hotSpots.map(h => ({
-        pitch: h.pitch,
-        yaw: h.yaw,
-        type: "scene",
-        sceneId: h.sceneId,
-        cssClass: "hs-" + h.type,
+        pitch: h.pitch, yaw: h.yaw, type: "scene",
+        sceneId: h.sceneId, cssClass: "hs-" + h.type,
         createTooltipFunc: createHotspot,
         createTooltipArgs: { type: h.type, text: h.text, label: h.label }
       }))
@@ -515,16 +296,13 @@
     scenes: pannellumScenes
   });
 
-  /* ============================================================
-     UI: cuadro superior y barra de zonas
-     ============================================================ */
-
   const zoneLabel = document.getElementById("zoneLabel");
   const zoneName = document.getElementById("zoneName");
   const stepIndicator = document.getElementById("stepIndicator");
   const zonesNav = document.getElementById("zonesNav");
+  const subStepsNav = document.getElementById("subStepsNav");
 
-  // Construir botones de zona
+  // Build main zone buttons
   Object.keys(zones).forEach(key => {
     const z = zones[key];
     const btn = document.createElement("button");
@@ -535,22 +313,42 @@
     zonesNav.appendChild(btn);
   });
 
+  // Dynamic UI update for zones & sub-step buttons (1, 2, 3...)
   function updateUI(sceneId) {
-    const s = scenes[sceneId];
-    if (!s) return;
-    const z = zones[s.zone];
+    const currentScene = scenes[sceneId];
+    if (!currentScene) return;
+
+    const z = zones[currentScene.zone];
     zoneLabel.textContent = "OMRÅDE";
     zoneName.textContent = z.name;
-    stepIndicator.textContent = s.step + " · " + s.title;
+    stepIndicator.textContent = currentScene.step + " · " + currentScene.title;
 
+    // Highlight main active zone
     document.querySelectorAll(".zone-btn").forEach(b => {
-      b.classList.toggle("active", b.dataset.zone === s.zone);
+      b.classList.toggle("active", b.dataset.zone === currentScene.zone);
     });
+
+    // Generate 1, 2, 3... step navigation buttons for current active zone
+    subStepsNav.innerHTML = "";
+    const zoneSceneKeys = Object.keys(scenes).filter(key => scenes[key].zone === currentScene.zone);
+
+    if (zoneSceneKeys.length > 1) {
+      subStepsNav.style.display = "flex";
+      zoneSceneKeys.forEach((key, index) => {
+        const stepBtn = document.createElement("button");
+        stepBtn.className = "step-btn" + (key === sceneId ? " active" : "");
+        stepBtn.textContent = index + 1;
+        stepBtn.onclick = () => viewer.loadScene(key);
+        subStepsNav.appendChild(stepBtn);
+      });
+    } else {
+      subStepsNav.style.display = "none";
+    }
   }
 
   viewer.on("scenechange", updateUI);
   viewer.on("load", () => updateUI(viewer.getScene()));
- updateUI("s1");
+  updateUI("s1");
 </script>
 </body>
 </html>
